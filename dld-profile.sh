@@ -35,6 +35,12 @@ then
   rm -rf "${userdir}"
 fi
 
+if [[ -d "${userdir}" ]]
+then
+  echo "  Already downloaded ${username}"
+  exit 2
+fi
+
 mkdir -p "${userdir}"
 touch "${userdir}/.incomplete"
 
@@ -135,10 +141,12 @@ do
   echo " done."
 done
 
+rm -rf "$userdir/files"
+
 echo -n "   - Result: "
 if du --help | grep -q apparent-size
 then
-  du --apparent-size -hs "$userdir/"* | cut -f 1
+  du --apparent-size -hs "$userdir/" | cut -f 1
 else
   du -hs "$userdir/"* | cut -f 1
 fi
