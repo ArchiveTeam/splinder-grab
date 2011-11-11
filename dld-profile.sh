@@ -48,7 +48,7 @@ fi
 mkdir -p "${userdir}"
 touch "${userdir}/.incomplete"
 
-echo "  Downloading ${username} profile"
+echo "  Downloading ${country} ${username} profile"
 
 echo -n "   - Downloading profile HTML pages..."
 $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
