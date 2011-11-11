@@ -1,0 +1,27 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    connection_pool (0.1.0)
+    girl_friday (0.9.6)
+      connection_pool (~> 0.1.0)
+    mechanize (2.0.1)
+      net-http-digest_auth (~> 1.1, >= 1.1.1)
+      net-http-persistent (~> 1.8)
+      nokogiri (~> 1.4)
+      webrobots (~> 0.0, >= 0.0.9)
+    net-http-digest_auth (1.1.1)
+    net-http-persistent (1.9)
+    nokogiri (1.5.0-java)
+    redis (2.2.2)
+    webrobots (0.0.12)
+      nokogiri (>= 1.4.4)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  connection_pool
+  girl_friday
+  mechanize
+  nokogiri
+  redis
