@@ -52,4 +52,6 @@ CATEGORIES.each do |category|
   page_workers << [agent, initial_page]
 end
 
-page_workers.wait_for_empty
+loop do
+  sleep 30
+end
