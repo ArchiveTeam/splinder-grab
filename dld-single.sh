@@ -38,7 +38,9 @@ then
   bytes_str="{"
   if [[ $( find "${userdir}/" -name "*-blog-*.gz" | wc -l ) -ne 0 ]]
   then
-    bytes_str="${bytes_str}\"blogs\":$( ./du-helper.sh -bs "${userdir}/"*"-blog-"*".warc.gz" ),"
+    bytes_str="${bytes_str}\"blogs\":$( ./du-helper.sh -bsc "${userdir}/"*"-blog-"*".warc.gz" : tail -n 1 ),"
+  else
+    bytes_str="${bytes_str}\"blogs\":0,"
   fi
   bytes_str="${bytes_str}\"html\":$( ./du-helper.sh -bs "${userdir}/"*"-html.warc.gz" ),"
   bytes_str="${bytes_str}\"media\":$( ./du-helper.sh -bs "${userdir}/"*"-media.warc.gz" )"
