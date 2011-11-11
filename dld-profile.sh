@@ -144,12 +144,7 @@ done
 rm -rf "$userdir/files"
 
 echo -n "   - Result: "
-if du --help | grep -q apparent-size
-then
-  du --apparent-size -hs "$userdir/" | cut -f 1
-else
-  du -hs "$userdir/"* | cut -f 1
-fi
+./du-helper.sh $userdir
 
 rm "${userdir}/.incomplete"
 
