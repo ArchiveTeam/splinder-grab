@@ -47,7 +47,7 @@ then
   bytes_str="${bytes_str}}"
 
   # some more statistics
-  ids=($( cut "${userdir}/media-urls.txt" -c 27- ))
+  ids=($( gcut "${userdir}/media-urls.txt" -c 27- ))
   id=0
   if [[ ${#ids[*]} -gt 0 ]]
   then
