@@ -53,7 +53,6 @@ then
   fi
 
   success_str="{\"downloader\":\"${youralias}\",\"user\":\"${username}\",\"bytes\":${bytes_str},\"version\":\"${VERSION}\",\"id\":\"${id}\"}"
-  echo "$success_str"
   echo "Telling tracker that '${username}' is done."
   resp=$( curl -s -f -d "$success_str" http://splinder.heroku.com/done )
   if [[ "$resp" != "OK" ]]
