@@ -42,6 +42,7 @@ page_workers = GirlFriday::WorkQueue.new(:page_workers, :size => CONCURRENCY_LEV
     end
 
     count = redis.scard('users')
+    redis.sadd('done', page.uri)
 
     puts "Done with #{page.uri}.  Total username count: #{count}."
   end
