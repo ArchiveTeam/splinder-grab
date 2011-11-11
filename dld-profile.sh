@@ -27,7 +27,8 @@ fi
 USER_AGENT="Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
 
 username="$1"
-userdir="data/${username:0:1}/${username:0:2}/${username:0:3}/${username}"
+enc_username=$( echo "$username" | tr '|&;()<>./\\*' '_' )
+userdir=$( printf "data/%s/%s/%s/%q" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username}" )
 
 if [[ -f "${userdir}/.incomplete" ]]
 then
@@ -50,7 +51,7 @@ echo -n "   - Downloading profile HTML pages..."
 $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
     -nv -o "$userdir/wget-phase-1.log" \
     --directory-prefix="$userdir/files/" \
-    --warc-file="$userdir/splinder.com-${username}-html" \
+    --warc-file="$userdir/splinder.com-${enc_username}-html" \
     --warc-max-size=inf \
     --warc-header="operator: Archive Team" \
     --warc-header="splinder-dld-script-version: ${VERSION}" \
@@ -93,7 +94,7 @@ then
   $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
       -nv -o "$userdir/wget-phase-2.log" \
       -O /dev/null \
-      --warc-file="$userdir/splinder.com-${username}-media" \
+      --warc-file="$userdir/splinder.com-${enc_username}-media" \
       --warc-max-size=inf \
       --warc-header="operator: Archive Team" \
       --warc-header="splinder-dld-script-version: ${VERSION}" \
@@ -120,7 +121,7 @@ do
   $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
       -nv -o "$userdir/wget-phase-3-${blog_domain}.log" \
       --directory-prefix="$userdir/files/" \
-      --warc-file="$userdir/splinder.com-${username}-blog-${blog_domain}" \
+      --warc-file="$userdir/splinder.com-${enc_username}-blog-${blog_domain}" \
       --warc-max-size=inf \
       --warc-header="operator: Archive Team" \
       --warc-header="splinder-dld-script-version: ${VERSION}" \
