@@ -3,7 +3,7 @@
 # Distributed downloading script for Splinder.com.
 #
 # This will get a username from the tracker and download data
-# from www.splinder.com.
+# from www.splinder.com or www.us.splinder.com.
 #
 # You need wget-warc to run this script. Please compile it and
 # copy the wget executable as wget-warc to the same directory
