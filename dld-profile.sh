@@ -144,7 +144,7 @@ done
 rm -rf "$userdir/files"
 
 echo -n "   - Result: "
-./du-helper.sh $userdir
+./du-helper.sh "$userdir/"
 
 rm "${userdir}/.incomplete"
 

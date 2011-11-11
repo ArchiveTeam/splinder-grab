@@ -10,10 +10,10 @@ userdir=$1
 
 if ( du --help 2>&1 | grep -q apparent-size )
 then
-  du --apparent-size -hs "$userdir/" | cut -f 1
+  du --apparent-size -hs "$userdir" | cut -f 1
 elif ( which -s gdu )
 then
-  gdu --apparent-size -hs "$userdir/" | cut -f 1
+  gdu --apparent-size -hs "$userdir" | cut -f 1
 else
-  du -hs "$userdir/"* | cut -f 1
+  du -hs "$userdir" | cut -f 1
 fi
