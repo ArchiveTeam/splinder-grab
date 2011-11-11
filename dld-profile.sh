@@ -3,10 +3,11 @@
 # Script for downloading the contents of one splinder.com profile.
 # (Not including the blog.)
 #
-# Usage:   dld-profile.sh ${USERNAME}
+# Usage:   dld-profile.sh it ${USERNAME}
+#          dld-profile.sh us ${USERNAME}
 #
 
-VERSION="20111111.01"
+VERSION="20111111.02"
 
 # this script needs wget-warc, which you can find on the ArchiveTeam wiki.
 
@@ -19,9 +20,18 @@ fi
 
 USER_AGENT="Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
 
-username="$1"
+if [[ $1 =~ us ]]
+then
+  country="us"
+  domain="us.splinder.com"
+else
+  country="it"
+  domain="splinder.com"
+fi
+
+username="$2"
 enc_username=$( echo "$username" | tr '|&;()<>./\\*' '_' )
-userdir=$( printf "data/%s/%s/%s/%q" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username}" )
+userdir=$( printf "data/%s/%s/%s/%s/%q" "${country}" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username}" )
 
 if [[ -f "${userdir}/.incomplete" ]]
 then
@@ -38,17 +48,17 @@ fi
 mkdir -p "${userdir}"
 touch "${userdir}/.incomplete"
 
-echo "  Downloading ${username} profile"
+echo "  Downloading ${country} ${username} profile"
 
 echo -n "   - Downloading profile HTML pages..."
 $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
     -nv -o "$userdir/wget-phase-1.log" \
     --directory-prefix="$userdir/files/" \
-    --warc-file="$userdir/splinder.com-${enc_username}-html" \
+    --warc-file="$userdir/${domain}-${enc_username}-html" \
     --warc-max-size=inf \
     --warc-header="operator: Archive Team" \
     --warc-header="splinder-dld-script-version: ${VERSION}" \
-    --warc-header="splinder-username: ${username}" \
+    --warc-header="splinder-username: ${domain}, ${username}" \
     -r -l inf --no-remove-listing \
     --no-timestamping \
     --trust-server-names \
@@ -59,12 +69,12 @@ $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
     -I "/mediablog/${username}" \
     -I "/media/comment/list/" \
     -R "sizes" \
-    "http://www.splinder.com/profile/${username}/" \
-    "http://www.splinder.com/ajax.php?type=counter&op=profile&profile=${username}" \
-    "http://www.splinder.com/profile/${username}/friends/" \
-    "http://www.splinder.com/profile/${username}/friendof/" \
-    "http://www.splinder.com/profile/${username}/blogs/" \
-    "http://www.splinder.com/mediablog/${username}/"
+    "http://www.${domain}/profile/${username}/" \
+    "http://www.${domain}/ajax.php?type=counter&op=profile&profile=${username}" \
+    "http://www.${domain}/profile/${username}/friends/" \
+    "http://www.${domain}/profile/${username}/friendof/" \
+    "http://www.${domain}/profile/${username}/blogs/" \
+    "http://www.${domain}/mediablog/${username}/"
 result=$?
 if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
 then
@@ -87,11 +97,11 @@ then
   $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
       -nv -o "$userdir/wget-phase-2.log" \
       -O /dev/null \
-      --warc-file="$userdir/splinder.com-${enc_username}-media" \
+      --warc-file="$userdir/${domain}-${enc_username}-media" \
       --warc-max-size=inf \
       --warc-header="operator: Archive Team" \
       --warc-header="splinder-dld-script-version: ${VERSION}" \
-      --warc-header="splinder-username: ${username}" \
+      --warc-header="splinder-username: ${domain}, ${username}" \
       -i "$userdir/media-urls.txt"
   result=$?
   if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
@@ -102,38 +112,49 @@ then
 fi
 echo " done."
 
-blog_domains=$(
+if [ -f "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" ]
+then
   grep -oE '<a href="http://[^." ]+\.splinder.com' \
-       "${userdir}/files/www.splinder.com/profile/${username}/blogs/index.html" \
-    | cut -c 17- \
-    | grep -vE "(edit|journal|manuale|www).splinder.com"
-)
-for blog_domain in $blog_domains
-do
-  echo -n "   - Downloading blog from ${blog_domain}..."
-  $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
-      -nv -o "$userdir/wget-phase-3-${blog_domain}.log" \
-      --directory-prefix="$userdir/files/" \
-      --warc-file="$userdir/splinder.com-${enc_username}-blog-${blog_domain}" \
-      --warc-max-size=inf \
-      --warc-header="operator: Archive Team" \
-      --warc-header="splinder-dld-script-version: ${VERSION}" \
-      --warc-header="splinder-username: ${username}" \
-      -r -l inf --no-remove-listing \
-      --no-timestamping \
-      --page-requisites --trust-server-names \
-      --span-hosts \
-      --domains="${blog_domain},files.splinder.com,www.splinder.com,syndication.splinder.com" \
-      --exclude-directories="/users,/media,/node,/profile,/mediablog,/community,/user,/night,/home,/mysearch,/online,/trackback,/myblog/post,/myblog/posts,/myblog/tags,/myblog/tag,/myblog/view,/myblog/latest,/myblog/subscribe,/myblog/comment/reply,/myblog/comments/latest,/post,/posts" \
-      "http://${blog_domain}/"
-  result=$?
-  if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
-  then
-    echo " ERROR ($result)."
-    exit 1
-  fi
-  echo " done."
-done
+       "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" \
+     | cut -c 17- \
+     | grep -vE "(edit|journal|manuale|www).splinder.com" \
+     > "${userdir}/blogs.txt"
+fi
+
+if [ -f "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" ]
+then
+  blog_domains=$(
+    grep Blog: "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" \
+      | grep -oE "<a href=\"http://[^.\" ]+\.${domain}" \
+      | cut -c 17-
+  )
+  for blog_domain in $blog_domains
+  do
+    echo -n "   - Downloading blog from ${blog_domain}..."
+    $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
+        -nv -o "$userdir/wget-phase-3-${blog_domain}.log" \
+        --directory-prefix="$userdir/files/" \
+        --warc-file="$userdir/${domain}-${enc_username}-blog-${blog_domain}" \
+        --warc-max-size=inf \
+        --warc-header="operator: Archive Team" \
+        --warc-header="splinder-dld-script-version: ${VERSION}" \
+        --warc-header="splinder-username: ${domain}, ${username}" \
+        -r -l inf --no-remove-listing \
+        --no-timestamping \
+        --page-requisites --trust-server-names \
+        --span-hosts \
+        --domains="${blog_domain},files.${domain},www.${domain},syndication.${domain}" \
+        --exclude-directories="/users,/media,/node,/profile,/mediablog,/community,/user,/night,/home,/mysearch,/online,/trackback,/myblog/post,/myblog/posts,/myblog/tags,/myblog/tag,/myblog/view,/myblog/latest,/myblog/subscribe,/myblog/comment/reply,/myblog/comments/latest,/post,/posts" \
+        "http://${blog_domain}/"
+    result=$?
+    if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
+    then
+      echo " ERROR ($result)."
+      exit 1
+    fi
+    echo " done."
+  done
+fi
 
 rm -rf "$userdir/files"
 

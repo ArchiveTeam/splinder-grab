@@ -3,10 +3,10 @@ import fileinput
 import re
 
 class UrlCollector:
-  FILES_URL_RE = re.compile("http://files.splinder.com/[a-z0-9_\.]+")
-  FILE_JPG_URL_RE = re.compile("^(http://files.splinder.com/[a-z0-9]+)[_a-z]*(\.(jpg|gif|png))$")
-  FILE_MP3_URL_RE = re.compile("^(http://files.splinder.com/[a-z0-9]+)[_a-z]*(\.mp3)$")
-  FILE_FLV_URL_RE = re.compile("^(http://files.splinder.com/[a-z0-9]+)[_a-z]*(\.flv)$")
+  FILES_URL_RE = re.compile("http://files.u?s?.?splinder.com/[a-z0-9_\.]+")
+  FILE_JPG_URL_RE = re.compile("^(http://files.u?s?.?splinder.com/[a-z0-9]+)[_a-z]*(\.(jpg|gif|png))$")
+  FILE_MP3_URL_RE = re.compile("^(http://files.u?s?.?splinder.com/[a-z0-9]+)[_a-z]*(\.mp3)$")
+  FILE_FLV_URL_RE = re.compile("^(http://files.u?s?.?splinder.com/[a-z0-9]+)[_a-z]*(\.flv)$")
 
   def __init__(self):
     self.urls = set()
