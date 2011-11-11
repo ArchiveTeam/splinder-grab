@@ -1,6 +1,6 @@
 Here be scripts for downloading Splinder.com.
 
-Usage: (at the moment this is still a trial, be prepared to rm -rf everything!)
+Usage:
 
 # install wget-warc (or copy your wget-warc binary from the MobileMe directory)
 ./get-wget-warc.sh
