@@ -1,4 +1,10 @@
 Here be scripts for downloading Splinder.com.
 
-dld-profile.sh ${USERNAME}
+Usage: (at the moment this is still a trial, be prepared to rm -rf everything!)
+
+# install wget-warc (or copy your wget-warc binary from the MobileMe directory)
+./get-wget-warc.sh
+
+# run a client
+./dld-client.sh YOURNICK
 
