@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 # Script for downloading the contents of one splinder.com profile.
 # (Not including the blog.)
 #
@@ -31,7 +32,7 @@ fi
 if [[ -d "${userdir}" ]]
 then
   echo "  Already downloaded ${username}"
-  exit 2
+  exit 0
 fi
 
 mkdir -p "${userdir}"
@@ -137,7 +138,7 @@ done
 rm -rf "$userdir/files"
 
 echo -n "   - Result: "
-./du-helper.sh "$userdir/"
+./du-helper.sh -hs "$userdir/"
 
 rm "${userdir}/.incomplete"
 
