@@ -29,18 +29,21 @@ page_workers = GirlFriday::WorkQueue.new(:page_workers, :size => CONCURRENCY_LEV
       end
     end
 
+    puts "Looking for 'next page' link..."
+
     next_links = (doc/'#pager a')
     go_to_next_page = next_links.detect { |l| goes_to_next_page?(l) }
 
     if go_to_next_page
       next_page = agent.click(go_to_next_page)
 
+      puts "Queuing up #{next_page.uri}..."
       page_workers << [agent, next_page]
     end
 
     count = redis.scard('users')
 
-    puts "Found #{count} usernames."
+    puts "Done with #{page.uri}.  Total username count: #{count}."
   end
 end
 
