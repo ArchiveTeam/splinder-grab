@@ -9,7 +9,7 @@
 # Usage:   check-dld.sh
 #
 
-for d in data/*/*/*/*
+for d in data/*/*/*/*/*
 do
   username=$( basename "$d" )
 
