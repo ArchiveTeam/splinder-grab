@@ -40,7 +40,7 @@ then
 fi
 
 cd data/
-for d in */*/*/*
+for d in */*/*/*/*
 do
   if [ ! -f "${d}/.incomplete" ]
   then

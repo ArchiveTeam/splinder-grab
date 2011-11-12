@@ -9,14 +9,14 @@
 # Usage:   check-dld.sh
 #
 
-for d in data/*/*/*/*
+for d in data/*/*/*/*/*
 do
   username=$( basename "$d" )
 
   # check for any incomplete downloads
   if [ -f "${d}/.incomplete" ]
   then
-    echo "${username} is still incomplete."
+    echo "${d} ${username} is still incomplete."
     continue
   fi
 done
