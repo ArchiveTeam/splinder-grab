@@ -35,20 +35,20 @@ userdir=$( printf "data/%s/%s/%s/%s/%q" "${country}" "${enc_username:0:1}" "${en
 
 if [[ -f "${userdir}/.incomplete" ]]
 then
-  echo "  Deleting incomplete result for ${username}"
+  echo "  Deleting incomplete result for ${country}:${username}"
   rm -rf "${userdir}"
 fi
 
 if [[ -d "${userdir}" ]]
 then
-  echo "  Already downloaded ${username}"
+  echo "  Already downloaded ${country}:${username}"
   exit 0
 fi
 
 mkdir -p "${userdir}"
 touch "${userdir}/.incomplete"
 
-echo "  Downloading ${country} ${username} profile"
+echo "  Downloading ${country}:${username} profile"
 
 echo -n "   - Downloading profile HTML pages..."
 $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
