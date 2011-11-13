@@ -40,7 +40,7 @@ then
 fi
 
 cd data/
-for d in */*/*/*/*
+find -mindepth 5 -maxdepth 5 -type d | while read d
 do
   if [ ! -f "${d}/.incomplete" ]
   then
