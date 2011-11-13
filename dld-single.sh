@@ -44,7 +44,20 @@ else
   exit 5
 fi
 
-if ./dld-profile.sh "$country" "$username_without_country"
+result=8
+tries=0
+while [ $result -eq 8 ]
+do
+  ./dld-profile.sh "$country" "$username_without_country"
+  result=$?
+  if [ $result -eq 8 ] && [ $tries -lt 5 ]
+  then
+    echo "Retrying this user."
+    tries=$(( tries + 1 ))
+  fi
+done
+
+if [ $result -eq 0 ]
 then
   # complete
 

@@ -80,8 +80,20 @@ if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
 then
   echo " ERROR ($result)."
   exit 1
+elif [ $result -eq 8 ]
+then
+  echo " done, with HTTP errors."
+  # check for 502, 504 errors
+  echo -n "   - Checking for important 502, 504 errors..."
+  if grep -q "ERROR 50" "${userdir}/wget-phase-1.log"
+  then
+    echo " errors found."
+    exit 8
+  fi
+  echo " none found."
+else
+  echo " done."
 fi
-echo " done."
 
 echo -n "   - Parsing profile HTML to extract media urls..."
 find "$userdir/files/" -name "*.html" \
@@ -108,9 +120,23 @@ then
   then
     echo " ERROR ($result)."
     exit 1
+  elif [ $result -eq 8 ]
+  then
+    echo " done, with HTTP errors."
+    # check for 502, 504 errors
+    echo -n "   - Checking for important 502, 504 errors..."
+    if grep -q "ERROR 50" "${userdir}/wget-phase-2.log"
+    then
+      echo " errors found."
+      exit 8
+    fi
+    echo " none found."
+  else
+    echo " done."
   fi
+else
+  echo " done."
 fi
-echo " done."
 
 if [ -f "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" ]
 then
@@ -151,8 +177,20 @@ then
     then
       echo " ERROR ($result)."
       exit 1
+    elif [ $result -eq 8 ]
+    then
+      echo " done, with HTTP errors."
+      # check for 502, 504 errors
+      echo -n "   - Checking for important 502, 504 errors..."
+      if grep -q "ERROR 50" "${userdir}/wget-phase-3-${blog_domain}.log"
+      then
+        echo " errors found."
+        exit 8
+      fi
+      echo " none found."
+    else
+      echo " done."
     fi
-    echo " done."
   done
 fi
 
