@@ -144,7 +144,7 @@ then
         --page-requisites --trust-server-names \
         --span-hosts \
         --domains="${blog_domain},files.${domain},www.${domain},syndication.${domain}" \
-        --exclude-directories="/users,/media,/node,/profile,/mediablog,/community,/user,/night,/home,/mysearch,/online,/trackback,/myblog/post,/myblog/posts,/myblog/tags,/myblog/tag,/myblog/view,/myblog/latest,/myblog/subscribe,/myblog/comment/reply,/myblog/comments/latest,/post,/posts,/book" \
+        --exclude-directories="/users,/media,/node,/profile,/mediablog,/community,/user,/night,/home,/mysearch,/online,/trackback,/myblog/post,/myblog/posts,/myblog/tags,/myblog/tag,/myblog/taglist,/myblog/view,/myblog/latest,/myblog/subscribe,/myblog/comment/reply,/myblog/comments/latest,/post,/posts,/book" \
         "http://${blog_domain}/"
     result=$?
     if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
