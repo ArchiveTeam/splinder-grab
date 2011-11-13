@@ -44,13 +44,20 @@ else
   exit 5
 fi
 
-result=8
+should_retry=1
 tries=0
-while [ $result -eq 8 ]
+while [ $should_retry -eq 1 ]
 do
   ./dld-profile.sh "$country" "$username_without_country"
   result=$?
-  if [ $result -eq 8 ] && [ $tries -lt 5 ]
+  if [ $result -eq 4 ] || [ $result -eq 8 ]
+  then
+    should_retry=1
+  else
+    should_retry=0
+  fi
+
+  if [ $should_retry -eq 1 ] && [ $tries -lt 5 ]
   then
     echo "Retrying this user."
     tries=$(( tries + 1 ))

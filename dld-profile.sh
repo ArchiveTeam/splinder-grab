@@ -7,7 +7,7 @@
 #          dld-profile.sh us ${USERNAME}
 #
 
-VERSION="20111113.01"
+VERSION="20111113.02"
 
 # this script needs wget-warc, which you can find on the ArchiveTeam wiki.
 
@@ -76,7 +76,7 @@ $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
     "http://www.${domain}/profile/${username}/blogs/" \
     "http://www.${domain}/mediablog/${username}/"
 result=$?
-if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
+if [ $result -ne 0 ] && [ $result -ne 4 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
 then
   echo " ERROR ($result)."
   exit 1
@@ -91,6 +91,10 @@ then
     exit 8
   fi
   echo " none found."
+elif [ $result -eq 4 ]
+then
+  echo " done, with network errors."
+  exit 4
 else
   echo " done."
 fi
@@ -116,7 +120,7 @@ then
       --warc-header="splinder-username: ${domain}, ${username}" \
       -i "$userdir/media-urls.txt"
   result=$?
-  if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
+  if [ $result -ne 0 ] && [ $result -ne 4 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
   then
     echo " ERROR ($result)."
     exit 1
@@ -131,6 +135,10 @@ then
       exit 8
     fi
     echo " none found."
+  elif [ $result -eq 4 ]
+  then
+    echo " done, with network errors."
+    exit 4
   else
     echo " done."
   fi
@@ -173,7 +181,7 @@ then
         --exclude-directories="/users,/media,/node,/profile,/mediablog,/community,/user,/night,/home,/mysearch,/online,/trackback,/myblog/post,/myblog/posts,/myblog/tags,/myblog/tag,/myblog/taglist,/myblog/view,/myblog/latest,/myblog/subscribe,/myblog/comment/reply,/myblog/comments/latest,/post,/posts,/book" \
         "http://${blog_domain}/"
     result=$?
-    if [ $result -ne 0 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
+    if [ $result -ne 0 ] && [ $result -ne 4 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
     then
       echo " ERROR ($result)."
       exit 1
@@ -188,6 +196,10 @@ then
         exit 8
       fi
       echo " none found."
+    elif [ $result -eq 4 ]
+    then
+      echo " done, with network errors."
+      exit 4
     else
       echo " done."
     fi
