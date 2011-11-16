@@ -72,7 +72,7 @@ then
   enc_username=$( echo "$username_without_country" | tr '|&;()<>./\\*' '_' )
   userdir=$( printf "data/%s/%s/%s/%s/%q" "$country" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username_without_country}" )
   bytes_str="{"
-  if [[ $( find "${userdir}/" -name "*-media.gz" | wc -l ) -ne 0 ]]
+  if [[ $( find "${userdir}/" -name "*-media.warc.gz" | wc -l ) -ne 0 ]]
   then
     bytes_str="${bytes_str}\"media\":$( ./du-helper.sh -bsc "${userdir}/"*"-media.warc.gz" | tail -n 1 ),"
   else
