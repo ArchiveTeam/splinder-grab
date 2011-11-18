@@ -104,7 +104,9 @@ then
 
   success_str="{\"downloader\":\"${youralias}\",\"user\":\"${username}\",\"bytes\":${bytes_str},\"version\":\"${VERSION}\",\"id\":\"${id}\"}"
   echo "Telling tracker that '${username}' is done."
-  resp=$( curl -s -f -d "$success_str" http://splinder.heroku.com/done )
+  tracker_no=$(( RANDOM % 2 ))
+  tracker_host="splinder-${tracker_no}.heroku.com"
+  resp=$( curl -s -f -d "$success_str" http://${tracker_host}/done )
   if [[ "$resp" != "OK" ]]
   then
     echo "ERROR contacting tracker. Could not mark '$username' done."

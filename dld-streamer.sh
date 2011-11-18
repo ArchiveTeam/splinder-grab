@@ -74,7 +74,9 @@ do
   then
     # request a username
     echo -n "$count Getting next username from tracker..."
-    username=$( curl -s -f -d "{\"downloader\":\"${youralias}\"}" http://splinder.heroku.com/request )
+    tracker_no=$(( RANDOM % 2 ))
+    tracker_host="splinder-${tracker_no}.heroku.com"
+    username=$( curl -s -f -d "{\"downloader\":\"${youralias}\"}" http://${tracker_host}/request )
 
     # empty?
     if [ -z $username ]
