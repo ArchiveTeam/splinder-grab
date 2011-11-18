@@ -58,7 +58,7 @@ fork_more=1
 
 while true
 do
-  if [[ ${#pids_users[*]} -eq $max_jobs ]]
+  if [[ ${#pids_users[*]} -eq $max_jobs || $fork_more -eq 0 ]]
   then
     sleep 1
   fi
