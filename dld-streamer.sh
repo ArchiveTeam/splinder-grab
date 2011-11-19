@@ -74,7 +74,7 @@ do
   then
     # request a username
     echo -n "$count Getting next username from tracker..."
-    tracker_no=$(( RANDOM % 2 ))
+    tracker_no=$(( RANDOM % 3 ))
     tracker_host="splinder-${tracker_no}.heroku.com"
     username=$( curl -s -f -d "{\"downloader\":\"${youralias}\"}" http://${tracker_host}/request )
 

@@ -104,7 +104,7 @@ then
 
   success_str="{\"downloader\":\"${youralias}\",\"user\":\"${username}\",\"bytes\":${bytes_str},\"version\":\"${VERSION}\",\"id\":\"${id}\"}"
   echo "Telling tracker that '${username}' is done."
-  tracker_no=$(( RANDOM % 2 ))
+  tracker_no=$(( RANDOM % 3 ))
   tracker_host="splinder-${tracker_no}.heroku.com"
   resp=$( curl -s -f -d "$success_str" http://${tracker_host}/done )
   if [[ "$resp" != "OK" ]]

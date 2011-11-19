@@ -54,7 +54,7 @@ while [ ! -f STOP ] || [[ $( stat -c '%Y' STOP ) -le $initial_stop_mtime ]]
 do
   # request a username
   echo -n "Getting next username from tracker..."
-  tracker_no=$(( RANDOM % 2 ))
+  tracker_no=$(( RANDOM % 3 ))
   tracker_host="splinder-${tracker_no}.heroku.com"
   username=$( curl -s -f -d "{\"downloader\":\"${youralias}\"}" http://${tracker_host}/request )
 
