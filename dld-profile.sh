@@ -33,6 +33,8 @@ username="$2"
 enc_username=$( echo "$username" | tr '|&;()<>./\\*' '_' )
 userdir=$( printf "data/%s/%s/%s/%s/%q" "${country}" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username}" )
 
+filedir="/tmp/tmpfs/"$username
+
 if [[ -f "${userdir}/.incomplete" ]]
 then
   echo "  Deleting incomplete result for ${country}:${username}"
@@ -53,7 +55,7 @@ echo "  Downloading ${country}:${username} profile"
 echo -n "   - Downloading profile HTML pages..."
 $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
     -nv -o "$userdir/wget-phase-1.log" \
-    --directory-prefix="$userdir/files/" \
+    --directory-prefix="$filedir/" \
     --warc-file="$userdir/${domain}-${enc_username}-html" \
     --warc-max-size=inf \
     --warc-header="operator: Archive Team" \
@@ -100,7 +102,7 @@ else
 fi
 
 echo -n "   - Parsing profile HTML to extract media urls..."
-find "$userdir/files/" -name "*.html" \
+find "$filedir/" -name "*.html" \
   | python extract-urls-from-html.py \
   > "$userdir/media-urls.txt"
 echo " done."
@@ -146,19 +148,19 @@ else
   echo " done."
 fi
 
-if [ -f "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" ]
+if [ -f "${filedir}/www.${domain}/profile/${username}/blogs/index.html" ]
 then
   grep -oE '<a href="http://[^." ]+\.splinder.com' \
-       "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" \
+       "${filedir}/www.${domain}/profile/${username}/blogs/index.html" \
      | cut -c 17- \
      | grep -vE "(edit|journal|manuale|www).splinder.com" \
      > "${userdir}/blogs.txt"
 fi
 
-if [ -f "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" ]
+if [ -f "${filedir}/www.${domain}/profile/${username}/blogs/index.html" ]
 then
   blog_domains=$(
-    grep Blog: "${userdir}/files/www.${domain}/profile/${username}/blogs/index.html" \
+    grep Blog: "${filedir}/www.${domain}/profile/${username}/blogs/index.html" \
       | grep -oE "<a href=\"http://[^.\" ]+\.${domain}" \
       | cut -c 17-
   )
@@ -167,7 +169,7 @@ then
     echo -n "   - Downloading blog from ${blog_domain}..."
     $WGET_WARC -U "${USER_AGENT}" -e "robots=off" \
         -nv -o "$userdir/wget-phase-3-${blog_domain}.log" \
-        --directory-prefix="$userdir/files/" \
+        --directory-prefix="$filedir/" \
         --warc-file="$userdir/${domain}-${enc_username}-blog-${blog_domain}" \
         --warc-max-size=inf \
         --warc-header="operator: Archive Team" \
@@ -206,7 +208,7 @@ then
   done
 fi
 
-rm -rf "$userdir/files"
+rm -rf "$filedir"
 
 echo -n "   - Result: "
 ./du-helper.sh -hs "$userdir/"
