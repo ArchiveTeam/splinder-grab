@@ -61,6 +61,8 @@ do
   then
     echo "Retrying this user."
     tries=$(( tries + 1 ))
+  else
+    should_retry=0
   fi
 done
 
