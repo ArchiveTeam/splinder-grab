@@ -82,9 +82,9 @@ do
     if [ -z $username ]
     then
       echo
-      echo "No more usernames available.  Entering reap mode..."
+      echo "Tracker uncooperative.  Pausing for 30 seconds..."
       echo
-      fork_more=0
+      sleep 30
     else
       echo " downloading ${username}"
       echo $username >> downloads.log
