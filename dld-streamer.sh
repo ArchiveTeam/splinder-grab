@@ -65,6 +65,8 @@ declare -A pids_users
 
 fork_more=1
 
+mkdir -p ./logs
+
 while true
 do
   if [[ ${#pids_users[*]} -eq $max_jobs || $fork_more -eq 0 ]]
@@ -98,7 +100,7 @@ do
       echo " downloading ${username}"
       echo $username >> downloads.log
 
-      ./dld-single.sh "$youralias" "$username" > "$username".log &
+      ./dld-single.sh "$youralias" "$username" > "./logs/${username}.log" &
       pids_users["$!"]="$username"
     fi
 #  else
