@@ -27,6 +27,15 @@ then
   exit 3
 fi
 
+# things are downloaded into here and then removed after the warc is
+# completed.
+if [ ! -d ./tmpfs ]
+then
+  echo "You really should mount a tmpfs on ./tmpfs , like so (run as root):"
+  echo "mount -t tmpfs -o size=1200M tmpfs ./tmpfs"
+  mkdir ./tmpfs
+fi
+
 # the script also needs curl
 
 if ! builtin type -p curl &>/dev/null

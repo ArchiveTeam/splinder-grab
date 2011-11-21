@@ -33,7 +33,7 @@ username="$2"
 enc_username=$( echo "$username" | tr '|&;()<>./\\*' '_' )
 userdir=$( printf "data/%s/%s/%s/%s/%q" "${country}" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username}" )
 
-filedir="/tmp/tmpfs/"$username
+filedir="./tmpfs/"$username
 
 if [[ -f "${userdir}/.incomplete" ]]
 then
@@ -81,6 +81,7 @@ result=$?
 if [ $result -ne 0 ] && [ $result -ne 4 ] && [ $result -ne 6 ] && [ $result -ne 8 ]
 then
   echo " ERROR ($result)."
+  rm -rf $filedir
   exit 1
 elif [ $result -eq 8 ]
 then
@@ -90,12 +91,14 @@ then
   if grep -q "ERROR 50" "${userdir}/wget-phase-1.log"
   then
     echo " errors found."
+    rm -rf $filedir
     exit 8
   fi
   echo " none found."
 elif [ $result -eq 4 ]
 then
   echo " done, with network errors."
+  rm -rf $filedir
   exit 4
 else
   echo " done."
