@@ -141,7 +141,7 @@ do
 	echo "$fin_usr" >> error-usernames
       else
 	echo "Success."
-	rm "$fin_usr".log
+	rm "./logs/${fin_usr}.log"
       fi
 
       # remove this child from the jobs list
