@@ -55,6 +55,23 @@ then
   exit 4
 fi
 
+outputline()
+{
+  dt=`date --rfc-3339=seconds`
+  echo "[$dt] $*"
+}
+
+outputstartline()
+{
+  dt=`date --rfc-3339=seconds`
+  echo -n "[$dt] $*"
+}
+
+outputendline()
+{
+  echo "$*"
+}
+
 initial_stop_mtime='0'
 if [ -f STOP ]
 then
@@ -77,14 +94,14 @@ do
 
   if [[ $fork_more -eq 1 ]] && [[ -f STOP && $( stat -c '%Y' STOP ) -gt $initial_stop_mtime ]]
   then
-    echo "$count Stopping on request..."
+    outputline "$count Stopping on request..."
     fork_more=0
   fi
 
   if [[ $( jobs -p -r | wc -l ) -lt $max_jobs && $fork_more -eq 1 ]]
   then
     # request a username
-    echo -n "$count Getting next username from tracker..."
+    outputstartline "$count Getting next username from tracker..."
     tracker_no=$(( RANDOM % 3 ))
     tracker_host="splinder-${tracker_no}.heroku.com"
     username=$( curl -s -f -d "{\"downloader\":\"${youralias}\"}" http://${tracker_host}/request )
@@ -93,11 +110,11 @@ do
     if [ -z $username ]
     then
       echo
-      echo "Tracker uncooperative.  Pausing for 30 seconds..."
+      outputline "Tracker uncooperative.  Pausing for 30 seconds..."
       echo
       sleep 30
     else
-      echo " downloading ${username}"
+      outputendline " downloading ${username}"
       echo $username >> downloads.log
 
       ./dld-single.sh "$youralias" "$username" > "./logs/${username}.log" &
@@ -127,21 +144,21 @@ do
     for pid in ${pids_jobs[*]}
     do
       if [[ $pid -eq $job ]] ; then
-	found=1
+        found=1
       fi
     done
     if [[ $found -eq 0 ]] ; then
       fin_usr=${pids_users[$job]}
       # child has died, not found in running jobs list
-      echo -n "$count PID $job finished '$fin_usr': "
+      outputstartline "$count PID $job finished '$fin_usr': "
       wait $job
       status=$?
       if [[ $status -ne 0 ]] ; then
-  	echo "Error - exited with status $status."
-	echo "$fin_usr" >> error-usernames
+        outputendline "Error - exited with status $status."
+        echo "$fin_usr" >> error-usernames
       else
-	echo "Success."
-	rm "./logs/${fin_usr}.log"
+        outputendline "Success."
+        rm "./logs/${fin_usr}.log"
       fi
 
       # remove this child from the jobs list
