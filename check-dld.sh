@@ -8,6 +8,13 @@
 #
 # Usage:   check-dld.sh
 #
+# Incomplete users will be output to stderr, and users with errors
+# will be output to stdout. You can use it to generate a list suitable
+# for dld-streamer.sh by doing this:
+#
+# ./check-dld.sh | cut -d " " -f 1
+#
+# where the character in the quotes is a space.
 
 for d_country in data/*
 do
@@ -19,7 +26,7 @@ do
     # check for any incomplete downloads
     if [ -f "${d}/.incomplete" ]
     then
-      echo "${country}:${username} is still incomplete."
+      echo "${country}:${username} is still incomplete." >&2
       continue
     fi
 
