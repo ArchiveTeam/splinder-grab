@@ -33,7 +33,7 @@ username="$2"
 enc_username=$( echo "$username" | tr '|&;()<>./\\*' '_' )
 userdir=$( printf "data/%s/%s/%s/%s/%q" "${country}" "${enc_username:0:1}" "${enc_username:0:2}" "${enc_username:0:3}" "${username}" )
 
-filedir="./tmpfs/"${country}/$username
+filedir="./tmpfs/${country}/${enc_username}"
 mkdir -p "$filedir"
 
 cleanup()
