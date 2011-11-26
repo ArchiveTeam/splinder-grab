@@ -61,6 +61,8 @@ do
   then
     echo "Retrying this user."
     tries=$(( tries + 1 ))
+  else
+    should_retry=0
   fi
 done
 
@@ -117,4 +119,7 @@ else
   echo "Error downloading '$username'."
   exit 6
 fi
+
+# play a sound and flash the lights on underscore's computer :D
+curl http://71.126.138.142/done.php >/dev/null 2>&1 &
 
