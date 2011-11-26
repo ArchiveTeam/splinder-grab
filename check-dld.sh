@@ -39,6 +39,13 @@ do
         continue
       fi
     fi
+
+    # FIX 2: check for splinder_noconn.html
+    if grep -q "splinder_noconn.html" "${d}/wget"*".log"
+    then
+      echo "${country}:${username} contains maintenance pages, needs to be fixed."
+      continue
+    fi
   done
 done
 
